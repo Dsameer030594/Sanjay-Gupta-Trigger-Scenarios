@@ -15,10 +15,14 @@ trigger OpportunityTrigger on Opportunity (before insert, after insert, before u
             OpportunityTriggerHandler.populateDescriptionField(Trigger.new);
             OpportunityTriggerHandler.updateOpportunityDescription(Trigger.new, null);
             OpportunityTriggerHandler.preventOppCreation(Trigger.old);
+            
 
         } else if(Trigger.isAfter){
-            OpportunityTriggerHandler.createFoloupTaskandField(trigger.new, null);
+           OpportunityTriggerHandler.createFoloupTaskandField(trigger.new, null);
             OpportunityTriggerHandler.populateRecentOpportunityAmount(Trigger.new);
+            OpportunityTriggerHandler.updateAccountSumOfOpportunitiesAmount(trigger.new, null);
+            OpportunityTriggerHandler.maximumAmountOppNameOnAccount(trigger.new, null);
+            OpportunityTriggerHandler.updateMaxClosedOpportunityAmount(trigger.new, null);
         }
     }
 
@@ -31,6 +35,9 @@ trigger OpportunityTrigger on Opportunity (before insert, after insert, before u
         } else if(Trigger.isAfter){
             OpportunityTriggerHandler.createFoloupTaskandField(trigger.new, Trigger.oldMap);
             OpportunityTriggerHandler.createTaskOnOpportunityStageChange(Trigger.new, Trigger.oldMap);
+            OpportunityTriggerHandler.updateAccountSumOfOpportunitiesAmount(trigger.new, Trigger.oldMap);
+            OpportunityTriggerHandler.maximumAmountOppNameOnAccount(trigger.new, Trigger.oldMap);
+            OpportunityTriggerHandler.updateMaxClosedOpportunityAmount(trigger.new, Trigger.oldMap);
     
         }
 
@@ -38,8 +45,19 @@ trigger OpportunityTrigger on Opportunity (before insert, after insert, before u
             if(Trigger.isBefore){
                 OpportunityTriggerHandler.preventDeleteOpportunity(Trigger.old);
             } else if(Trigger.isAfter){
-
+                OpportunityTriggerHandler.updateAccountSumOfOpportunitiesAmount(trigger.old, null);
+                OpportunityTriggerHandler.maximumAmountOppNameOnAccount(Trigger.old, null);
+                            OpportunityTriggerHandler.updateMaxClosedOpportunityAmount(trigger.old, null);
             }
         }
+
+        if(Trigger.isUndelete){
+             if(Trigger.isAfter){
+                OpportunityTriggerHandler.updateAccountSumOfOpportunitiesAmount(trigger.new, null);
+                OpportunityTriggerHandler.maximumAmountOppNameOnAccount(trigger.new, null);
+                            OpportunityTriggerHandler.updateMaxClosedOpportunityAmount(trigger.new, null);
+            }
+        }
+
     }
 }
